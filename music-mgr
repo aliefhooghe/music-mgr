@@ -1,0 +1,64 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+import sys, os
+
+##############################
+
+sys.path.append(os.path.join(sys.path[0],"music-mgr-modules"))
+
+import extract_directory
+import renumber
+import del_sub_name
+import backup
+
+cmd_modules_list = [
+    backup,
+    del_sub_name,
+    extract_directory,
+    renumber
+]
+
+cmd_modules = {m.command: m for m in cmd_modules_list}
+
+#################################################################
+#   Usage info
+
+def usage():
+    print("usage : {} <command> [<args>...]\n".format(sys.argv[0]))
+    print("List of available commands :")
+
+    for cmd, module in cmd_modules.items():
+        args_desc = " ".join(map(lambda x : "<{}>".format(x), module.arguments))
+        print("music-mgr {sub_cmd} {args}".format(
+            sub_cmd=cmd, args=args_desc).ljust(50) + 
+            " : {}".format(module.description))
+
+    print("\n")
+    sys.exit()
+
+def main():
+    argv = sys.argv
+    argc = len(argv)
+
+    if (argc < 2):
+        print("Error : no command was given")
+        usage()
+    else:
+        cmd = argv[1]
+        module = cmd_modules.get(cmd, None)
+
+        if module is None:
+            print("Error : unknown command {}".format(cmd))
+            usage()
+        else:
+            module_argc = len(module.arguments)
+
+            if argc != (2 + module_argc):
+                print("Error : bad number of arguments for command {}".format(cmd))
+                usage()
+            else:
+                module.main_function(*argv[2:])
+
+if __name__ == "__main__":
+    main()
