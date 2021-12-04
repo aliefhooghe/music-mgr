@@ -18,7 +18,7 @@ def filename_from_metadata(metadata, ext):
 
     # Use filename as title if it is not provided in metadata
     title = (
-        metadata.title if metadata is not None 
+        metadata.title if metadata is not None
         else path.splitext(path.basename(metadata.flac_path))[0]
     ).title()
 
@@ -26,7 +26,7 @@ def filename_from_metadata(metadata, ext):
 
 def album_directory_from_metadata(metadata):
     artist_folder = (
-        metadata.albumartist if metadata.albumartist is not None 
+        metadata.albumartist if metadata.albumartist is not None
         else metadata.artist if metadata.artist is not None
         else metadata.composer if metadata.composer is not None
         else "Unknown Artist"
@@ -38,7 +38,7 @@ def album_directory_from_metadata(metadata):
     ).title()
 
     if (metadata.discnumber is not None):
-        if metadata.disctotal is None or metadata.disctotal is None > 1:
+        if metadata.disctotal is None or metadata.disctotal > 1:
             album_folder = album_folder + " - Disc {}".format(metadata.discnumber)
 
     return path.join(
