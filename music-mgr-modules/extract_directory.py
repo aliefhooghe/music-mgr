@@ -2,6 +2,7 @@
 
 import os, string
 import os.path as path
+import tarfile
 import flac_utils as flac
 import my_utils as utils
 
@@ -105,8 +106,26 @@ def process_cue_img(flac_path, cue_path, output_dir):
     utils.safe_mkdir(album_directory)
     flac.cue_split(flac_path, cue_path, album_directory)
 
-def main(input_dir, output_dir):
-    print("Processing input directory '" + input_dir + "' to output directory '" + output_dir + "'")
+def get_input_directory(input_path: str):
+
+    if path.isdir(input_path):
+        # The input path is already a directory
+        return input_path
+    elif utils.has_extension(".tar")(input_path):
+        # Create an input directory
+        input_dir_path = input_path.replace(".tar", "")
+        utils.safe_mkdir(input_dir_path)
+
+        # Extract the archive into the input directory
+        archive = tarfile.open(input_path)
+        print(f"Extract archive {input_path} to {input_dir_path}...")
+        archive.extractall(input_dir_path)
+        archive.close()
+        return input_dir_path
+
+def main(input_path, output_dir):
+    print("Processing input '" + input_path + "' to output directory '" + output_dir + "'")
+    input_dir = get_input_directory(input_path)
     input_content = os.walk(input_dir)
 
     for (sub_dir, dir_list, file_list) in input_content:
@@ -131,6 +150,6 @@ def main(input_dir, output_dir):
 
 # Expose functionality
 command = "extract"
-arguments = ["input-dir", "output-dir"]
+arguments = ["input-path", "output-dir"]
 description = "Extract a flac directory"
 main_function = main
