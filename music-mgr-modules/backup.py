@@ -16,7 +16,7 @@ def exec_parallel_encode_tasks(tasks):
     for p in process:
         p.wait()
 
-def main(input_dir, output_dir, parallel_encode_count = 3):
+def main(input_dir, output_dir, parallel_encode_count = 16):
     input_content = os.walk(input_dir)
 
     print("Saving input directory '" + input_dir + "' to output directory '" + output_dir + "'")
