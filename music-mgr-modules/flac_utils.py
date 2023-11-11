@@ -2,8 +2,18 @@
 
 import subprocess as sb
 import config
+from string import digits
 
 #   metaflac wrapper
+
+def parse_int(input: str):
+	separators = [ '/' ]
+	
+	for sep in separators:
+		if sep in input:
+			return int(input.split(sep)[0])
+		
+	return int(input)
 
 class metadata:
 
@@ -14,12 +24,12 @@ class metadata:
 		("composer", str),
 		("date", str),
 		("description", str),
-		("discnumber", int),
-		("disctotal", int),
+		("discnumber", parse_int),
+		("disctotal", parse_int),
 		("genre", str),
 		("title", str),
-		("tracknumber", int),
-		("tracktotal", int)
+		("tracknumber", parse_int),
+		("tracktotal", parse_int)
 	]
 
 	def __init__(self, flac_path):
